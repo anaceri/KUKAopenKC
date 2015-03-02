@@ -29,7 +29,7 @@ ActController *ac;
 Task *task;
 TaskNameT taskname;
 ParameterManager* pm;
-
+#ifdef DJALLIL_CONF
 #define newP_x 0.28
 #define newP_y 0.5
 #define newP_z 0.50
@@ -37,7 +37,14 @@ ParameterManager* pm;
 #define newO_x 0.0
 #define newO_y 0;
 #define newO_z 0.0;
-
+#else
+#define newP_x 0
+#define newP_y 0.3
+#define newP_z 0.30
+#define newO_x 0.0
+#define newO_y -M_PI/2;
+#define newO_z 0.0;
+#endif
 
 char inp;
 
@@ -59,7 +66,7 @@ void moveto_cb(void){
     Eigen::Vector3d p,o;
     p.setZero();
     o.setZero();
-    p(0) = newP_x-0.3;
+    p(0) = newP_x-0.1;
     p(1) = newP_y;
     p(2) = newP_z;
 

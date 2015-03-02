@@ -204,7 +204,8 @@ void KukaLwr::initChains(){
         DH representation referecen paper:Visual Estimation and Control of Robot Manipulating Systems(phd thesis)
     */
     if (kuka_right == rn){
-        worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.31,0.0))));
+#ifdef DJALLIL_CONF
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.31,0.0))));
         worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.0,0.0))));
         worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.4,0.0))));
         worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.0,0.0))));
@@ -212,6 +213,20 @@ void KukaLwr::initChains(){
         worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.0,0.0))));
         worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,0.0,0.078,0.0))));
         worldToTool.addSegment (Segment(Joint(Joint::None),Frame(Vector(0, 0, 0.170))));
+#else	
+	worldToTool.addSegment (Segment(Joint(Joint::None),Frame(Vector(0.0823, 0.897, 0.2975))));
+	worldToTool.addSegment (Segment(Joint(Joint::None),Frame(Rotation(Rotation::RotY(1.047)))));
+	worldToTool.addSegment (Segment(Joint(Joint::None),Frame(Rotation(Rotation::RotZ(0.5236)))));
+
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.31,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.0,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.4,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.0,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,M_PI_2,0.39,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,-1.0*M_PI_2,0.0,0.0))));
+	worldToTool.addSegment (Segment(Joint(Joint::RotZ),Frame(Frame::DH(0.0,0.0,0.078,0.0))));
+#endif
+	    
     }
     if (kuka_left == rn){
         worldToTool.addSegment (Segment(Joint(Joint::None),Frame(Vector(-0.0823, 0.897, 0.2975))));
