@@ -12,6 +12,7 @@
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+#include <termios.h>
 
 #include "ComOkc.h"
 #include "KukaLwr.h"
@@ -21,8 +22,11 @@
 #include "tacservocontroller.h"
 #include "tacservotask.h"
 //#include "CtrlParam.h"
+#include "Timer.h"
+#include <fstream>
+#include "Util.h"
 
-
+std::ofstream stiffness_data;
 ComOkc *com_okc;
 Robot *kuka_lwr;
 ActController *ac;
@@ -81,7 +85,7 @@ void moveto_cb(void){
     Eigen::Vector3d p,o;
     p.setZero();
     o.setZero();
-    p(0) = newP_x-0.3;
+    p(0) = newP_x-0.1;
     p(1) = newP_y;
     p(2) = newP_z;
 
@@ -113,6 +117,7 @@ void movein_xyz(float x, float y, float z){
     o.setZero();
 
     cp = kuka_lwr->get_cur_cart_p();
+    o = tm2axisangle(kuka_lwr->get_cur_cart_o());
 
     p(0) = cp(0) + x;
     p(1) = cp(1) + y;
@@ -128,7 +133,11 @@ void movein_xyz(float x, float y, float z){
     ac = new ProActController(*pm);
     task = new KukaSelfCtrlTask(RP_NOCONTROL);
     task->mt == JOINTS;
-    task->mft = GLOBAL;
+    task->mft = LOCALP2P;
+    task->velocity_p2p(0) = x/2.0;
+    task->velocity_p2p(1) = y/2.0;
+    task->velocity_p2p(2) = z/2.0;
+    task->set_initial_p_eigen(cp);
     task->set_desired_p_eigen(p);
     task->set_desired_o_ax(o);
     rmt = NormalMode;
@@ -229,8 +238,10 @@ void run(){
         Kcp(4,4) = 250;
         Kcp(5,5) = 250;
 
-        Eigen::MatrixXd K_axis;
+        Eigen::MatrixXd K_axis,K_axis_diag,K_cart;
         K_axis.setZero(7,7);
+        K_axis_diag.setZero(7,7);
+        K_cart.setZero(7,7);
 
 
         J_eigen = kuka_lwr->Jac_kdl.data;
@@ -239,10 +250,11 @@ void run(){
         for(int i = 0; i < 7; i++){
             if(K_axis(i,i)>2000) K_axis(i,i) = 2000;
             if(K_axis(i,i)<0.01) K_axis(i,i) = 0.01;
-            pm->stiff_ctrlpara.axis_stiffness[i] = K_axis(i,i);
+            pm->stiff_ctrlpara.axis_stiffness[i] = K_axis_diag(i,i) = K_axis(i,i);
             pm->stiff_ctrlpara.axis_damping[i] = 0.7;
         }
-        //stiffness_data<<K_axis(0,0)<<","<<K_axis(1,1)<<","<<K_axis(2,2)<<","<<K_axis(3,3)<<","<<K_axis(4,4)<<","<<K_axis(5,5);
+        K_cart = (J_eigen*K_axis_diag.inverse()*J_eigen.transpose()).inverse();
+//        stiffness_data<<K_axis(0,0)<<","<<K_axis(1,1)<<","<<K_axis(2,2)<<","<<K_axis(3,3)<<","<<K_axis(4,4)<<","<<K_axis(5,5);
 
         //kuka_lwr->update_robot_stiffness(pm);
         kuka_lwr->get_joint_position_act();
@@ -265,7 +277,8 @@ void run(){
             std::cout<<"gettimeofday function error at the current time"<<std::endl;
         }
         intervaltime = timeval_diff(NULL,&v_cur,&v_old);
-        //std::cout<<"stiffness are "<<std::endl;std::cout<<K_axis<<std::endl;
+//        std::cout<<"stiffness are in J"<<std::endl;std::cout<<K_axis<<std::endl;
+//        std::cout<<"stiffness are in C"<<std::endl;std::cout<<K_cart<<std::endl;
         //stiffness_data<<","<<intervaltime<<std::endl;
         //std::cout<<"interval is "<<intervaltime<<std::endl;
     }
@@ -303,7 +316,7 @@ int main(int argc, char* argv[])
 
     double step = 0.1;
     std::thread t1(keypresscap);
-    stiffness_data.open("stiff.txt");
+    stiffness_data.open("/tmp/stiff.txt");
     inp = 'f';
     init();
     while(inp != 'e' && inp != EOF){
@@ -326,11 +339,11 @@ int main(int argc, char* argv[])
            inp = '\n';
            break;
         case 'C':
-            movein_xyz(-0.2, 0.0, 0.0);
+            movein_xyz(-0.1, 0.0, 0.0);
             inp = '\n';
             break;
         case 'D':
-            movein_xyz(0.2, 0.0, 0.0);
+            movein_xyz(0.1, 0.0, 0.0);
             inp = '\n';
             break;
         case '\n':

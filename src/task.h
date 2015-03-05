@@ -65,7 +65,8 @@ enum ModalityT{
 
 enum MoveFrameT{
     GLOBAL,
-    LOCAL
+    LOCAL,
+    LOCALP2P
 };
 
 class Task
@@ -73,9 +74,11 @@ class Task
 public:
     Task();
     virtual Eigen::Vector3d get_desired_p_eigen() = 0;
+    virtual Eigen::Vector3d get_initial_p_eigen() = 0;
     virtual Eigen::Matrix3d get_desired_o_eigen() = 0;
     virtual Eigen::Vector3d get_desired_o_ax() = 0;
     virtual void set_desired_p_eigen(Eigen::Vector3d p) = 0;
+    virtual void set_initial_p_eigen(Eigen::Vector3d p) = 0;
     virtual void set_desired_o_eigen(Eigen::Matrix3d o_eigen) = 0;
     virtual void set_desired_o_ax(Eigen::Vector3d o_ax) = 0;
     virtual void set_desired_cp_myrmex(double *) = 0;
@@ -84,8 +87,9 @@ public:
     TaskNameT curtaskname;
     ModalityT mt;
     MoveFrameT mft;
+    Eigen::Vector3d velocity_p2p;
 protected:
-    Eigen::Vector3d desired_p_eigen;
+    Eigen::Vector3d desired_p_eigen,initial_p_eigen;
     Eigen::Matrix3d desired_o_eigen;
     Eigen::Vector3d desired_o_ax;
 };

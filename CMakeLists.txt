@@ -20,5 +20,5 @@ include_directories("${EIGEN3_INCLUDES}")
 include_directories("${KUKA_CONTROLLER_DIR}/src")
 
 aux_source_directory(src SRC_LIST)
-add_executable(${PROJECT_NAME} app/main.cpp ${SRC_LIST})
+add_executable(${PROJECT_NAME} app/kukamove.cpp ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} ${CORE_LIBS})
