@@ -34,7 +34,7 @@ JntLimitFilter::JntLimitFilter(double t)
     velocity_limits[6] = VELOCITY_DAMP*3.8397;
 
     cycle_time = t;
-    speedlimit = 0.2;
+    speedlimit = 0.5;
     for (int i=0; i < 7; i++){
         lastJerk[i] = 0;
         lastAccel[i] = 0;
