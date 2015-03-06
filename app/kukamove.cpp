@@ -76,7 +76,7 @@ void keypresscap(void)
         inp_tmp = getch();
             if ( inp_tmp != '\n' ) {
             inp = inp_tmp;
-            std::cout<<"in sub task loop, you input char "<<inp<<std::endl;
+//            std::cout<<"in sub task loop, you input char "<<inp<<std::endl;
             }
     }
 }
@@ -106,7 +106,7 @@ void moveto_cb(void){
     task->set_desired_p_eigen(p);
     task->set_desired_o_ax(o);
     rmt = NormalMode;
-    std::cout<<"robot self movement and move to new pose"<<std::endl;
+//    std::cout<<"robot self movement and move to new pose"<<std::endl;
 }
 
 void movein_xyz(float x, float y, float z){
@@ -134,14 +134,14 @@ void movein_xyz(float x, float y, float z){
     task = new KukaSelfCtrlTask(RP_NOCONTROL);
     task->mt == JOINTS;
     task->mft = LOCALP2P;
-    task->velocity_p2p(0) = x/2.0;
-    task->velocity_p2p(1) = y/2.0;
-    task->velocity_p2p(2) = z/2.0;
+    task->velocity_p2p(0) = x/1.0;
+    task->velocity_p2p(1) = y/1.0;
+    task->velocity_p2p(2) = z/1.0;
     task->set_initial_p_eigen(cp);
     task->set_desired_p_eigen(p);
     task->set_desired_o_ax(o);
     rmt = NormalMode;
-    std::cout<<"robot self movement and move to new pose"<<std::endl;
+//    std::cout<<"robot self movement and move to new pose"<<std::endl;
 }
 
 void psudog_cb(void){
