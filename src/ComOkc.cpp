@@ -83,7 +83,7 @@ int ComOkc::left_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fri
     }
     else{
         for(int i = 0; i <7; i++){
-            new_pos[i] = pos_act[i];
+            new_pos[i] = 0.5*(pos_act[i]+com_okc_ptr->jnt_position_mea[i]);
         }
         com_okc_ptr->controller_update = false;
         com_okc_ptr->data_available = false;
@@ -146,7 +146,7 @@ int ComOkc::right_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fr
     }
     else{
         for(int i = 0; i <7; i++){
-            new_pos[i] = pos_act[i];
+            new_pos[i] = 0.5*(pos_act[i]+com_okc_ptr->jnt_position_mea[i]);
         }
         com_okc_ptr->controller_update = false;
         com_okc_ptr->data_available = false;
