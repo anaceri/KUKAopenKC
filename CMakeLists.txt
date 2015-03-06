@@ -13,7 +13,7 @@ set(KUKA_CONTROLLER_DIR KUKA_CONTROLLER_DIR CACHE PATH "path to the kuka control
 set(CORE_LIBS "-L${CORE_ROOT_DIR}/lib -Wl,-rpath=${CORE_ROOT_DIR}/lib -lopenkcfri -lorocos-kdl -lcbf -pthread")
 set(CORE_INCLUDES "${CORE_ROOT_DIR}/include")
 set(CBF_INCLUDES "${CORE_INCLUDES}/cbf0.2")
-set(EIGEN3_INCLUDES "${CORE_ROOT_DIR}/eigen3")
+set(EIGEN3_INCLUDES "/home/admin-kognw/SWLib/eigen3")
 include_directories("${CORE_INCLUDES}")
 include_directories("${CBF_INCLUDES}")
 include_directories("${EIGEN3_INCLUDES}")
