@@ -129,7 +129,7 @@ void movein_xyz(float x, float y, float z){
         pm->stiff_ctrlpara.axis_stiffness[i] = 1000;
         pm->stiff_ctrlpara.axis_damping[i] = 0.7;
     }
-    std::cout<<"change the stiffness"<<std::endl;
+    //std::cout<<"change the stiffness"<<std::endl;
     ac = new ProActController(*pm);
     task = new KukaSelfCtrlTask(RP_NOCONTROL);
     task->mt == JOINTS;
@@ -314,6 +314,9 @@ void init(){
 int main(int argc, char* argv[])
 {
 
+    int sinCounter = 0;
+    float teta = 0;
+    bool sinOn = false;
     double step = 0.1;
     std::thread t1(keypresscap);
     stiffness_data.open("/tmp/stiff.txt");
@@ -346,11 +349,24 @@ int main(int argc, char* argv[])
             movein_xyz(0.1, 0.0, 0.0);
             inp = '\n';
             break;
+        case 'l':
+            sinOn = !sinOn;
+            inp = '\n';
+            break;
         case '\n':
             break;
         default:
 
             break;
+        }
+        if(sinOn){
+            sinCounter = sinCounter + 1;
+            if (sinCounter == 250){
+                teta = teta + 0.01;
+                movein_xyz(-0.25 * sin(teta), 0.0, 0.0);
+                sinCounter = 0;
+                //std::cout<<"teta = "<< sin(teta)<<std::endl;
+            }
         }
         run();
         usleep(20);
