@@ -120,6 +120,20 @@ void ProActController::update_robot_reference(Robot *robot, Task *t){
         local_to_global(robot->get_cur_cart_p(),robot->get_cur_cart_o(),llv,\
                         lov,p_target,o_target);
     }
+    if(t->mft == LOCALP2P){
+        //checking the whether moved distance is the same like desired move distance
+        if((robot->get_cur_cart_p()-t->get_initial_p_eigen()).norm()<\
+            (t->get_desired_p_eigen()-t->get_initial_p_eigen()).norm()){
+            p_target = robot->get_cur_cart_p() + t->velocity_p2p;\
+            std::cout<<"p cur are "<<robot->get_cur_cart_p()<<std::endl;
+            std::cout<<"vel "<<t->velocity_p2p<<std::endl;
+        }
+        else{
+            p_target = robot->get_cur_cart_p();
+        }
+        std::cout<<"in local p2p mode"<<std::endl;
+        o_target = t->get_desired_o_ax();
+    }
     for (int i=0; i < 3; i++){
         cart_command[i] = p_target(i);
         cart_command[i+3] = o_target(i);

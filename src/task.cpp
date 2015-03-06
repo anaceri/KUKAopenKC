@@ -20,4 +20,5 @@ Task::Task()
     curtaskname.prot = RP_NOCONTROL;
     mt = JOINTS;
     mft = GLOBAL;
+    velocity_p2p.setZero();
 }
