@@ -47,6 +47,7 @@ public:
     RobotNameT get_robotname(){return rn;}
     Eigen::Matrix3d get_init_TM(){return m_init_tm;}
     void set_init_TM(Eigen::Matrix3d tm) {m_init_tm = tm;}
+    std::ofstream v_data;
 private:
     void initChains();
     void initCbf();

@@ -4,10 +4,12 @@
 #include <unistd.h>
 #include "actcontroller.h"
 #include "CtrlParam.h"
+#include <fstream>
 
 #define initP_x 0.28
 #define initP_y 0.3
 #define initP_z 0.25
+
 
 void KukaLwr::setReference (CBF::FloatVector new_ref){
     if (new_ref.size() != 6){
@@ -80,6 +82,13 @@ void KukaLwr::set_joint_command(RobotModeT m){
             d_updates[i] = updates(i);
         }
         jlf->get_filtered_value(d_updates,pupdates);
+        for(int i = 0; i < 7; i++){
+            v_data<<d_updates[i]<<",";
+        }
+        for(int i = 0; i < 7; i++){
+            v_data<<pupdates[i]<<",";
+        }
+        v_data<<std::endl;
         for(int i = 0; i < 7; i++){
             jnt_command[i] = jnt_position_act[i] + pupdates[i];
             okc_node->jnt_command[i] = jnt_command[i];
@@ -277,7 +286,6 @@ void KukaLwr::initCbf (){
             currentTaskTargetP->set_reference(myReferenceVector);
             initSubordinateReference (mySubordinateReferenceVector);
             currentSubordinateTaskReferenceP->set_reference (mySubordinateReferenceVector);
-
             double limit = M_PI * (165.0 / 180.0);
 
             CBF::FloatVector vmins = CBF::FloatVector::Constant(7, -limit);
@@ -452,4 +460,5 @@ KukaLwr::KukaLwr(RobotNameT robotname, ComOkc& com)
         updates(i) = 0.0;
     }
     jlf = new JntLimitFilter(okc_node->cycle_time);
+    v_data.open("/tmp/vdata.txt");
 }

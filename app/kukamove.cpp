@@ -363,7 +363,7 @@ int main(int argc, char* argv[])
             sinCounter = sinCounter + 1;
             if (sinCounter == 250){
                 teta = teta + 0.01;
-                movein_xyz(-0.25 * sin(teta), 0.0, 0.0);
+                movein_xyz(-0.1 * sin(teta), 0.0, 0.0);
                 sinCounter = 0;
                 //std::cout<<"teta = "<< sin(teta)<<std::endl;
             }
