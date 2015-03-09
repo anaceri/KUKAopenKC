@@ -4,7 +4,7 @@
  Author      : Qiang Li
  Version     :
  Copyright   : Copyright Qiang Li, Universität Bielefeld
- Description : Kuka joint impedance mode for kuka movement
+ Description : Kuka Cartesian impedance mode for kuka movement
  ============================================================================
  */
 
@@ -162,8 +162,23 @@ void print_pf(void){
 }
 
 void switch_stiff_cb(void){
-
-
+    Eigen::VectorXd cp_stiff,cp_damping;
+    cp_stiff.setZero(6);
+    cp_damping.setZero(6);
+    cp_stiff[0] = 25;
+    cp_stiff[1] = 2000;
+    cp_stiff[2] = 2000;
+    cp_stiff[3] = 200;
+    cp_stiff[4] = 200;
+    cp_stiff[5] = 200;
+    cp_damping[0] = 0.7;
+    cp_damping[1] = 0.7;
+    cp_damping[2] = 0.7;
+    cp_damping[3] = 0.7;
+    cp_damping[4] = 0.7;
+    cp_damping[5] = 0.7;
+    kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+    std::cout<<"change stiffness"<<std::endl;
 }
 
 Timer tHello([]()

@@ -41,6 +41,7 @@ public:
     virtual void update_cbf_controller() = 0;
     virtual void set_joint_command(RobotModeT m) = 0;
     virtual void update_robot_stiffness() = 0;
+    virtual void update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd) = 0;
     virtual void setAxisStiffnessDamping (double* s, double* d) = 0;
     virtual void no_move() = 0;
     virtual void waitForFinished() = 0;

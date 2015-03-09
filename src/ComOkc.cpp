@@ -96,6 +96,7 @@ int ComOkc::right_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fr
     fri_float_t jnt_pos[7];
     struct timeval v_cur, v_old;
     long long intervaltime;
+//    std::cout<<"in joint impendance mode"<<std::endl;
     okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->getrobot_id(),jnt_pos);
     okc_get_ft_tcp_est(ComOkc::okc,com_okc_ptr->getrobot_id(), com_okc_ptr->ft);
     for(int i = 0; i <7; i++){
@@ -156,7 +157,11 @@ int ComOkc::right_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fr
     return (OKC_OK);
 }
 int ComOkc::okcCartposAxisAbsCallback (void* priv, const fri_float_t* cartpos_act, fri_float_t* axispos_act,fri_float_t* new_cartpos, fri_float_t* new_axispos){
-//    ComOkc *com_okc_ptr = (ComOkc*) priv;
+    ComOkc *com_okc_ptr = (ComOkc*) priv;
+    okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
+    okc_cp_lbr_mnj(axispos_act,new_axispos);
+    okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
+//    std::cout<<"in cartesian impendance mode"<<std::endl;
     return (OKC_OK);
 }
 
@@ -323,10 +328,27 @@ void ComOkc::set_stiffness(double *s, double *d){
     okc_set_axis_stiffness_damping(okc,robot_id,astiffness,adamping);
 }
 
+void ComOkc::set_cp_stiffness(double *cps,double *cpd){
+    cpstiff.x = cps[0];
+    cpstiff.y = cps[1];
+    cpstiff.z = cps[2];
+    cpstiff.a = cps[3];
+    cpstiff.b = cps[4];
+    cpstiff.c = cps[5];
+
+    cpdamping.x = cpd[0];
+    cpdamping.y = cpd[1];
+    cpdamping.z = cpd[2];
+    cpdamping.a = cpd[3];
+    cpdamping.b = cpd[4];
+    cpdamping.c = cpd[5];
+    okc_set_cp_stiffness_damping(okc,robot_id,cpstiff,cpdamping);
+}
+
 ComOkc::ComOkc(RobotNameT connectToRobot=kuka_right, \
                const char* ahostname = OKC_HOST, const char* aport = OKC_PORT)
 {
-    legacy_axis_mode = true;
+    legacy_axis_mode = false;
     rn = connectToRobot;
     controller_update = false;
     ft = new coords_t;

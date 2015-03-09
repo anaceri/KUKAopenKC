@@ -38,7 +38,7 @@ public:
     fri_float_t jnt_command[7];
     coords_t* ft;
     void set_stiffness(double *s, double *d);
-
+    void set_cp_stiffness(double *cps,double *cpd);
     void start_brake();
     void release_brake();
 private:
@@ -59,6 +59,9 @@ private:
     void get_cycle_time();
     lbr_axis_t astiffness;
     lbr_axis_t adamping;
+    coords_t cpstiff;
+    coords_t cpdamping;
+
 
 };
 

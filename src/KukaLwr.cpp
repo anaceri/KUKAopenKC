@@ -120,6 +120,16 @@ void KukaLwr::update_robot_stiffness(){
 //    setAxisStiffnessDamping(stiff_ctrlpara.axis_stiffness, stiff_ctrlpara.axis_damping);
 }
 
+void KukaLwr::update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd){
+    double s[6];
+    double d[6];
+    for(int i = 0; i < 6; i++){
+        s[i] = cps[i];
+        d[i] = cpd[i];
+    }
+    okc_node->set_cp_stiffness(s,d);
+};
+
 double KukaLwr::gettimecycle(){
     double t;
     t = okc_node->cycle_time;
