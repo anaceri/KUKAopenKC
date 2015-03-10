@@ -28,6 +28,7 @@ public:
     void update_robot_state();
     void get_joint_position_act();
     void get_joint_position_mea(double *);
+    void get_joint_position_mea();
     void get_eef_ft(Eigen::Vector3d&,Eigen::Vector3d&);
     void set_joint_command(RobotModeT m);
     void update_cbf_controller();

@@ -124,7 +124,7 @@ int ComOkc::okcCartposAxisAbsCallback (void* priv, const fri_float_t* cartpos_ac
 //    okc_print_lbr_mnj(new_axispos);
     if (OKC_OK != okc_is_robot_in_command_mode(com_okc_ptr->okc,com_okc_ptr->robot_id)){
         okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
-        okc_cp_lbr_mnj(axispos_act,new_axispos);
+        okc_cp_lbr_mnj(jnt_pos,new_axispos);
         okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
         return (OKC_OK);
     }
@@ -146,9 +146,10 @@ int ComOkc::okcCartposAxisAbsCallback (void* priv, const fri_float_t* cartpos_ac
         //Todo:use the updated control output
         for(int i = 0; i <7; i++){
             new_axispos[i] = com_okc_ptr->jnt_command[i];
+            new_axispos[i] = jnt_pos[i];
         }
         for(int i = 0; i <12; i++){
-            new_cartpos[i] = com_okc_ptr->new_cartpos[i];
+            new_cartpos[i] = cartpos_act[i];
         }
         com_okc_ptr->controller_update = false;
         com_okc_ptr->data_available = false;

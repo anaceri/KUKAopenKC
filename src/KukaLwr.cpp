@@ -57,6 +57,9 @@ void KukaLwr::update_robot_state(){
     for (int i=0; i < LBR_MNJ; i++){
         q(i) = jnt_position_act[i];
     }
+    for (int i=0; i < LBR_MNJ; i++){
+        q2(i) = jnt_position_mea[i];
+    }
     worldToToolFkSolver->JntToCart(q,position);
     baseToToolFkSolver->JntToCart (q2,baseposition);
     Jac_kdl.resize(7);
@@ -116,12 +119,12 @@ void KukaLwr::set_joint_command(RobotModeT m){
             okc_node->jnt_command[i] = jnt_command[i];
         }
     }
-    std::cout<<"new position is";
+//    std::cout<<"new position is";
     for(int i = 0; i < 12; i++){
-        std::cout<<new_cartpos[i]<<",";
+//        std::cout<<new_cartpos[i]<<",";
         okc_node->new_cartpos[i] = new_cartpos[i];
     }
-    std::cout<<std::endl;
+//    std::cout<<std::endl;
 
 }
 
@@ -192,6 +195,12 @@ void KukaLwr::get_eef_ft(Eigen::Vector3d& f,Eigen::Vector3d& t){
 void KukaLwr::get_joint_position_act(){
     for (int i=0;i < 7; i++){
         jnt_position_act[i] = okc_node->jnt_position_act[i];
+    }
+}
+
+void KukaLwr::get_joint_position_mea(){
+    for (int i=0;i < 7; i++){
+        jnt_position_mea[i] = okc_node->jnt_position_mea[i];
     }
 }
 

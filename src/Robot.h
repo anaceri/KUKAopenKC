@@ -37,6 +37,7 @@ public:
     Robot();
     virtual void get_joint_position_act() = 0;
     virtual void get_joint_position_mea(double *) = 0;
+    virtual void get_joint_position_mea() = 0;
     virtual void update_robot_state() = 0;
     virtual void update_cbf_controller() = 0;
     virtual void set_joint_command(RobotModeT m) = 0;
