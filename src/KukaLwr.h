@@ -41,6 +41,7 @@ public:
     fri_float_t jnt_position_act[7];
     fri_float_t jnt_position_mea[7];
     fri_float_t jnt_command[7];
+    fri_float_t new_cartpos[12];
     void setAxisStiffnessDamping (double* s, double* d);
     void update_robot_stiffness();
     void update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd);

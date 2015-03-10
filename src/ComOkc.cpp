@@ -12,21 +12,6 @@ int ComOkc::left_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fri
     long long intervaltime;
     okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->getrobot_id(), jnt_pos);
     okc_get_ft_tcp_est(ComOkc::okc,com_okc_ptr->getrobot_id(), com_okc_ptr->ft);
-    //following two printout are fri_command from krl and fri part test.
-//    std::cout<<"fri offset ";
-//    for (int i = 0; i < LBR_MNJ; i++)
-//    {
-//        std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPosFriOffset[i]<<",";
-//    }
-//    std::cout<<std::endl;
-
-//    std::cout<<"cmdjntpos ";
-//    for (int i = 0; i < LBR_MNJ; i++)
-//    {
-//        std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPos[i]<<",";
-//    }
-//    std::cout<<std::endl;
-
     for(int i = 0; i <7; i++){
         com_okc_ptr->jnt_position_act[i] = pos_act[i];
         com_okc_ptr->jnt_position_mea[i] = jnt_pos[i];
@@ -34,28 +19,6 @@ int ComOkc::left_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fri
 
     //for the starting stage, without this kuka can not switch to the fri mode.
     if (OKC_OK != okc_is_robot_in_command_mode(com_okc_ptr->okc,com_okc_ptr->robot_id)){
-        //following two printout are fri_command from krl and fri part test.
-//        std::cout<<"left fri offset ";
-//        for (int i = 0; i < LBR_MNJ; i++)
-//        {
-//            std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPosFriOffset[i]<<",";
-//        }
-//        std::cout<<std::endl;
-
-//        std::cout<<"left cmdjntpos ";
-//        for (int i = 0; i < LBR_MNJ; i++)
-//        {
-//            std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPos[i]<<",";
-//        }
-//        std::cout<<std::endl;
-
-//        std::cout<<"left msrjntpos ";
-//        for (int i = 0; i < LBR_MNJ; i++)
-//        {
-//            std::cout<<jnt_pos[i]<<",";
-//        }
-//        std::cout<<std::endl;
-
         for(int i = 0; i <7; i++){
             new_pos[i] = jnt_pos[i];
         }
@@ -107,21 +70,6 @@ int ComOkc::right_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fr
         for(int i = 0; i <7; i++){
             new_pos[i] = jnt_pos[i];
         }
-
-//        std::cout<<"right fri offset ";
-//        for (int i = 0; i < LBR_MNJ; i++)
-//        {
-//            std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPosFriOffset[i]<<",";
-//        }
-//        std::cout<<std::endl;
-
-//        std::cout<<"right cmdjntpos ";
-//        for (int i = 0; i < LBR_MNJ; i++)
-//        {
-//            std::cout<<ComOkc::okc->robot_data[com_okc_ptr->getrobot_id()].cmdJntPos[i]<<",";
-//        }
-//        std::cout<<std::endl;
-
         return (OKC_OK);
     }
     intervaltime = 0;
@@ -157,11 +105,61 @@ int ComOkc::right_okcAxisAbsCallback (void* priv, const fri_float_t* pos_act, fr
     return (OKC_OK);
 }
 int ComOkc::okcCartposAxisAbsCallback (void* priv, const fri_float_t* cartpos_act, fri_float_t* axispos_act,fri_float_t* new_cartpos, fri_float_t* new_axispos){
+    struct timeval v_cur, v_old;
+    long long intervaltime;
+    fri_float_t jnt_pos[7];
     ComOkc *com_okc_ptr = (ComOkc*) priv;
-    okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
-    okc_cp_lbr_mnj(axispos_act,new_axispos);
-    okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
-//    std::cout<<"in cartesian impendance mode"<<std::endl;
+    okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->getrobot_id(),jnt_pos);
+//    okc_get_ft_tcp_est(ComOkc::okc,com_okc_ptr->getrobot_id(), com_okc_ptr->ft);
+    for(int i = 0; i <7; i++){
+        com_okc_ptr->jnt_position_act[i] = axispos_act[i];
+        com_okc_ptr->jnt_position_mea[i] = jnt_pos[i];
+    }
+//    okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
+//    okc_cp_lbr_mnj(axispos_act,new_axispos);
+//    okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
+
+
+//    okc_print_lbr_mnj(axispos_act);
+//    okc_print_lbr_mnj(new_axispos);
+    if (OKC_OK != okc_is_robot_in_command_mode(com_okc_ptr->okc,com_okc_ptr->robot_id)){
+        okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
+        okc_cp_lbr_mnj(axispos_act,new_axispos);
+        okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
+        return (OKC_OK);
+    }
+    intervaltime = 0;
+    if(gettimeofday(&v_old,NULL)){
+        std::cout<<"gettimeofday function error at the current time"<<std::endl;
+    }
+//    std::cout<<"time difference for two sampling step is "<<timeval_diff(NULL,&v_old,&v_last)<<std::endl;
+    v_last = v_old;
+    com_okc_ptr->data_available = true;
+    while((intervaltime < 1500)&&(com_okc_ptr->controller_update == false)){
+        if(gettimeofday(&v_cur,NULL)){
+            std::cout<<"gettimeofday function error at the current time"<<std::endl;
+        }
+        intervaltime = timeval_diff(NULL,&v_cur,&v_old);
+    }
+//    std::cout<<"out of the cycling and updata flag "<<intervaltime<<","<<com_okc_ptr->controller_update<<std::endl;
+    if(com_okc_ptr->controller_update == true){
+        //Todo:use the updated control output
+        for(int i = 0; i <7; i++){
+            new_axispos[i] = com_okc_ptr->jnt_command[i];
+        }
+        for(int i = 0; i <12; i++){
+            new_cartpos[i] = com_okc_ptr->new_cartpos[i];
+        }
+        com_okc_ptr->controller_update = false;
+        com_okc_ptr->data_available = false;
+    }
+    else{
+        okc_cp_lbr_mnj(axispos_act,new_axispos);
+        okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
+        std::cout<<"cartesian stiffness did get respond in time"<<std::endl;
+        com_okc_ptr->controller_update = false;
+        com_okc_ptr->data_available = false;
+    }
     return (OKC_OK);
 }
 

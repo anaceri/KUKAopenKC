@@ -36,6 +36,7 @@ public:
     float jnt_position_mea[7];
     bool data_available;
     fri_float_t jnt_command[7];
+    fri_float_t new_cartpos[12];
     coords_t* ft;
     void set_stiffness(double *s, double *d);
     void set_cp_stiffness(double *cps,double *cpd);

@@ -49,19 +49,35 @@ void KukaLwr::setReference (CBF::Float x, CBF::Float y, CBF::Float z, CBF::Float
 
 void KukaLwr::update_robot_state(){
     KDL::JntArray q = JntArray (7);
+    KDL::JntArray q2 = JntArray (7);
     KDL::Frame position;
     KDL::Rotation TM_kdl;
     KDL::Vector position_p_kdl;
+    KDL::Frame baseposition;
     for (int i=0; i < LBR_MNJ; i++){
         q(i) = jnt_position_act[i];
     }
     worldToToolFkSolver->JntToCart(q,position);
+    baseToToolFkSolver->JntToCart (q2,baseposition);
     Jac_kdl.resize(7);
     worldToToolJacSolver->JntToJac(q,Jac_kdl);
     TM_kdl = position.M;
     position_p_kdl = position.p;
     conversions::convert(TM_kdl,m_TM_eigen);
     conversions::convert(position_p_kdl, m_p_eigen);
+
+    new_cartpos[0] = baseposition.M.data[0];
+    new_cartpos[1] = baseposition.M.data[1];
+    new_cartpos[2] = baseposition.M.data[2];
+    new_cartpos[3] = baseposition.p(0);
+    new_cartpos[4] = baseposition.M.data[3];
+    new_cartpos[5] = baseposition.M.data[4];
+    new_cartpos[6] = baseposition.M.data[5];
+    new_cartpos[7] = baseposition.p(1);
+    new_cartpos[8] = baseposition.M.data[6];
+    new_cartpos[9] = baseposition.M.data[7];
+    new_cartpos[10] = baseposition.M.data[8];
+    new_cartpos[11] = baseposition.p(2);
 }
 
 void KukaLwr::update_cbf_controller(){
@@ -100,6 +116,13 @@ void KukaLwr::set_joint_command(RobotModeT m){
             okc_node->jnt_command[i] = jnt_command[i];
         }
     }
+    std::cout<<"new position is";
+    for(int i = 0; i < 12; i++){
+        std::cout<<new_cartpos[i]<<",";
+        okc_node->new_cartpos[i] = new_cartpos[i];
+    }
+    std::cout<<std::endl;
+
 }
 
 void KukaLwr::no_move(){
