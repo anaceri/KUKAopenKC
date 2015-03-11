@@ -164,11 +164,12 @@ void print_pf(void){
 }
 
 void switch_stiff_cb(void){
-    Eigen::VectorXd cp_stiff,cp_damping;
+    Eigen::VectorXd cp_stiff,cp_damping,extft;
     cp_stiff.setZero(6);
     cp_damping.setZero(6);
+    extft.setZero(6);
     cp_stiff[0] = 2000;
-    cp_stiff[1] = 2000;
+    cp_stiff[1] = 500;
     cp_stiff[2] = 0;
     cp_stiff[3] = 200;
     cp_stiff[4] = 200;
@@ -179,7 +180,9 @@ void switch_stiff_cb(void){
     cp_damping[3] = 0.7;
     cp_damping[4] = 0.7;
     cp_damping[5] = 0.7;
+    extft[1] = 2;
     kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+//    kuka_lwr->update_robot_cp_exttcpft(extft);
     std::cout<<"change stiffness"<<std::endl;
 }
 

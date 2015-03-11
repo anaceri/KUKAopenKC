@@ -344,6 +344,16 @@ void ComOkc::set_cp_stiffness(double *cps,double *cpd){
     okc_set_cp_stiffness_damping(okc,robot_id,cpstiff,cpdamping);
 }
 
+void ComOkc::set_cp_ExtTcpFT(double *tcpft){
+    extft.x = tcpft[0];
+    extft.y = tcpft[1];
+    extft.z = tcpft[2];
+    extft.a = tcpft[3];
+    extft.b = tcpft[4];
+    extft.c = tcpft[5];
+    okc_set_cp_addTcpFT(okc,robot_id,extft);
+}
+
 ComOkc::ComOkc(RobotNameT connectToRobot=kuka_right, \
                const char* ahostname = OKC_HOST, const char* aport = OKC_PORT, KUKACTRLMODET kmt=JNT_IMP)
 {

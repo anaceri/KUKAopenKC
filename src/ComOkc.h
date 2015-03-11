@@ -45,6 +45,7 @@ public:
     coords_t* ft;
     void set_stiffness(double *s, double *d);
     void set_cp_stiffness(double *cps,double *cpd);
+    void set_cp_ExtTcpFT(double *tcpft);
     void start_brake();
     void release_brake();
 private:
@@ -67,6 +68,7 @@ private:
     lbr_axis_t adamping;
     coords_t cpstiff;
     coords_t cpdamping;
+    coords_t extft;
 
 
 };

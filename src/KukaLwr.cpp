@@ -156,6 +156,14 @@ void KukaLwr::update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd)
     okc_node->set_cp_stiffness(s,d);
 };
 
+void KukaLwr::update_robot_cp_exttcpft(Eigen::VectorXd ft_kuka){
+    double ft_okc[6];
+    for(int i = 0; i < 6; i++){
+        ft_okc[i] = ft_kuka[i];
+    }
+    okc_node->set_cp_ExtTcpFT(ft_okc);
+}
+
 double KukaLwr::gettimecycle(){
     double t;
     t = okc_node->cycle_time;

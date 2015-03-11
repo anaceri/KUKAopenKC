@@ -46,6 +46,7 @@ public:
     void setAxisStiffnessDamping (double* s, double* d);
     void update_robot_stiffness();
     void update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd);
+    void update_robot_cp_exttcpft(Eigen::VectorXd ft);
     JntLimitFilter *jlf;
     RobotNameT get_robotname(){return rn;}
     Eigen::Matrix3d get_init_TM(){return m_init_tm;}
