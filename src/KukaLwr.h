@@ -52,6 +52,8 @@ public:
     Eigen::Matrix3d get_init_TM(){return m_init_tm;}
     void set_init_TM(Eigen::Matrix3d tm) {m_init_tm = tm;}
     std::ofstream v_data;
+    Eigen::Vector3d get_cur_vel();
+    fri_float_t old_cartpos[12];
 private:
     void initChains();
     void initCbf();

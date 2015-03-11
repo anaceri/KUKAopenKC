@@ -39,7 +39,7 @@ ParameterManager* pm;
 #define newP_z 0.50
 
 #define newO_x 0.0
-#define newO_y 0;
+#define newO_y 0.0
 #define newO_z 0.0;
 #else
 #define newP_x 0
@@ -57,6 +57,7 @@ char inp;
 RobotModeT rmt;
 KUKACTRLMODET kmt;
 
+bool stiffflag;
 
 int getch()
 {
@@ -163,27 +164,29 @@ void print_pf(void){
 //    std::cout<<"torque "<<t[0]<<","<<t[1]<<","<<t[2]<<std::endl;
 }
 
+
 void switch_stiff_cb(void){
-    Eigen::VectorXd cp_stiff,cp_damping,extft;
-    cp_stiff.setZero(6);
-    cp_damping.setZero(6);
-    extft.setZero(6);
-    cp_stiff[0] = 2000;
-    cp_stiff[1] = 500;
-    cp_stiff[2] = 0;
-    cp_stiff[3] = 200;
-    cp_stiff[4] = 200;
-    cp_stiff[5] = 200;
-    cp_damping[0] = 0.7;
-    cp_damping[1] = 0.7;
-    cp_damping[2] = 0.7;
-    cp_damping[3] = 0.7;
-    cp_damping[4] = 0.7;
-    cp_damping[5] = 0.7;
-    extft[1] = 2;
-    kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+//    Eigen::VectorXd cp_stiff,cp_damping,extft;
+    stiffflag = true;
+//    cp_stiff.setZero(6);
+//    cp_damping.setZero(6);
+//    extft.setZero(6);
+//    cp_stiff[0] = 2000;
+//    cp_stiff[1] = 200;
+//    cp_stiff[2] = 2000;
+//    cp_stiff[3] = 200;
+//    cp_stiff[4] = 200;
+//    cp_stiff[5] = 200;
+//    cp_damping[0] = 0.7;
+//    cp_damping[1] = 0.7;
+//    cp_damping[2] = 0.7;
+//    cp_damping[3] = 0.7;
+//    cp_damping[4] = 0.7;
+//    cp_damping[5] = 0.7;
+//    extft[1] = 20;
+//    kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
 //    kuka_lwr->update_robot_cp_exttcpft(extft);
-    std::cout<<"change stiffness"<<std::endl;
+//    std::cout<<"change stiffness"<<std::endl;
 }
 
 Timer tHello([]()
@@ -277,9 +280,42 @@ void run(){
 ////        stiffness_data<<K_axis(0,0)<<","<<K_axis(1,1)<<","<<K_axis(2,2)<<","<<K_axis(3,3)<<","<<K_axis(4,4)<<","<<K_axis(5,5);
 
 //        //kuka_lwr->update_robot_stiffness(pm);
+
+
+        Eigen::VectorXd cp_stiff,cp_damping,extft;
+        Eigen::Vector3d vel;
+        vel.setZero();
+        extft.setZero(6);
         kuka_lwr->get_joint_position_act();
         kuka_lwr->get_joint_position_mea();
         kuka_lwr->update_robot_state();
+        vel = kuka_lwr->get_cur_vel();
+        if(stiffflag ==true){
+            cp_stiff.setZero(6);
+            cp_damping.setZero(6);
+            cp_stiff[0] = 0;
+            cp_stiff[1] = 200;
+            cp_stiff[2] = 2000;
+            cp_stiff[3] = 200;
+            cp_stiff[4] = 200;
+            cp_stiff[5] = 200;
+            cp_damping[0] = 0.7;
+            cp_damping[1] = 0.7;
+            cp_damping[2] = 0.7;
+            cp_damping[3] = 0.7;
+            cp_damping[4] = 0.7;
+            cp_damping[5] = 0.7;
+//            if(fabs(vel[0])>0.02)
+//                extft[1] = 20*vel[0];
+//            else{
+//                extft[1] = 0;
+//            }
+            extft[1] = 10;
+//            std::cout<<"vel and force "<<vel[0]<<","<<extft[1]<<std::endl;
+            kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+            kuka_lwr->update_robot_cp_exttcpft(extft);
+        }
+
 //        //using all kinds of controllers to update the reference
 //        if(task->mt == JOINTS)
 //            ac->update_robot_reference(kuka_lwr,task);
@@ -331,6 +367,7 @@ void init(){
     tHello.setSingleShot(false);
     tHello.setInterval(Timer::Interval(SAMPLEFREQUENCE));
     tHello.start(true);
+    stiffflag = false;
 }
 
 int main(int argc, char* argv[])

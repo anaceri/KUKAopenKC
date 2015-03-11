@@ -54,6 +54,7 @@ public:
     virtual Eigen::Matrix3d get_init_TM() = 0;
     Eigen::Vector3d get_cur_cart_p();
     Eigen::Matrix3d get_cur_cart_o();
+    virtual Eigen::Vector3d get_cur_vel() = 0;
     KDL::Chain baseToTool;
     KDL::Chain worldToTool;
     KDL::ChainFkSolverPos_recursive* baseToToolFkSolver;

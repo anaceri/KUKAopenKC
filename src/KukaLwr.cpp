@@ -83,6 +83,19 @@ void KukaLwr::update_robot_state(){
     new_cartpos[11] = baseposition.p(2);
 }
 
+Eigen::Vector3d KukaLwr::get_cur_vel(){
+    Eigen::Vector3d vel;
+    vel.setZero();
+
+    vel(0) = (new_cartpos[3] - old_cartpos[3])/gettimecycle();
+    vel(1) = (new_cartpos[7] - old_cartpos[7])/gettimecycle();
+    vel(2) = (new_cartpos[11] - old_cartpos[11])/gettimecycle();
+    for(int i = 0; i < 12; i++){
+        old_cartpos[i] = new_cartpos[i];
+    }
+    return vel;
+}
+
 void KukaLwr::update_cbf_controller(){
     setReference(cart_command);
     CBF::FloatVector newResourceVector(7);
