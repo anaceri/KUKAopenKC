@@ -59,6 +59,8 @@ KUKACTRLMODET kmt;
 
 bool stiffflag;
 
+double t_t;
+
 int getch()
 {
     struct termios oldt, newt;
@@ -293,9 +295,9 @@ void run(){
         if(stiffflag ==true){
             cp_stiff.setZero(6);
             cp_damping.setZero(6);
-            cp_stiff[0] = 0;
+            cp_stiff[0] = 2000;
             cp_stiff[1] = 200;
-            cp_stiff[2] = 2000;
+            cp_stiff[2] = 0;
             cp_stiff[3] = 200;
             cp_stiff[4] = 200;
             cp_stiff[5] = 200;
@@ -310,7 +312,10 @@ void run(){
 //            else{
 //                extft[1] = 0;
 //            }
-            extft[1] = 10;
+            t_t = t_t + 0.01;
+            extft[1] = 30*sin(t_t);
+            if(t_t>6.28){t_t = 0.0;}
+//            extft[1] = 30;
 //            std::cout<<"vel and force "<<vel[0]<<","<<extft[1]<<std::endl;
             kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
             kuka_lwr->update_robot_cp_exttcpft(extft);
@@ -368,6 +373,7 @@ void init(){
     tHello.setInterval(Timer::Interval(SAMPLEFREQUENCE));
     tHello.start(true);
     stiffflag = false;
+    t_t = 0.0;
 }
 
 int main(int argc, char* argv[])
