@@ -345,9 +345,14 @@ void ComOkc::set_cp_stiffness(double *cps,double *cpd){
 }
 
 ComOkc::ComOkc(RobotNameT connectToRobot=kuka_right, \
-               const char* ahostname = OKC_HOST, const char* aport = OKC_PORT)
+               const char* ahostname = OKC_HOST, const char* aport = OKC_PORT, KUKACTRLMODET kmt=JNT_IMP)
 {
-    legacy_axis_mode = false;
+    if(kmt == JNT_IMP){
+        legacy_axis_mode = true;
+    }
+    else{
+        legacy_axis_mode = false;
+    }
     rn = connectToRobot;
     controller_update = false;
     ft = new coords_t;

@@ -55,6 +55,8 @@ ParameterManager* pm;
 char inp;
 
 RobotModeT rmt;
+KUKACTRLMODET kmt;
+
 
 int getch()
 {
@@ -302,7 +304,8 @@ void run(){
 
 void init(){
     pm = new ParameterManager("right_arm_param.xml");
-    com_okc = new ComOkc(kuka_right,OKC_HOST,OKC_PORT);
+    kmt = CART_IMP;
+    com_okc = new ComOkc(kuka_right,OKC_HOST,OKC_PORT,CART_IMP);
     com_okc->connect();
     kuka_lwr = new KukaLwr(kuka_right,*com_okc);
     ac = new ProActController(*pm);

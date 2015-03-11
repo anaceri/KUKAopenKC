@@ -23,10 +23,15 @@
 #define LEFT_ROBOT_ID   1
 #define RIGHT_ROBOT_ID  2
 
+enum KUKACTRLMODET{
+    JNT_IMP = 0,
+    CART_IMP
+};
+
 class ComOkc : public ComInterface
 {
 public:
-    ComOkc(RobotNameT connectToRobot, const char* hostname, const char* port);
+    ComOkc(RobotNameT connectToRobot, const char* hostname, const char* port,KUKACTRLMODET kmt);
     void connect();
     bool isConnected();
     void waitForFinished();
