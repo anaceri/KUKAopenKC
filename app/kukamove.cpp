@@ -162,14 +162,14 @@ void print_pf(void){
 //    std::cout<<"torque "<<t[0]<<","<<t[1]<<","<<t[2]<<std::endl;
 }
 
-void switch_stiff_cb(void){
+void switch_stiff_cb1(void){
         Eigen::VectorXd cp_stiff,cp_damping,extft;
         cp_stiff.setZero(6);
         cp_damping.setZero(6);
         extft.setZero(6);
-        cp_stiff[0] = 2000;
-        cp_stiff[1] = 0;
-        cp_stiff[2] = 2000;
+        cp_stiff[0] = 1000;
+        cp_stiff[1] = 1000;
+        cp_stiff[2] = 1000;
         cp_stiff[3] = 200;
         cp_stiff[4] = 200;
         cp_stiff[5] = 200;
@@ -185,9 +185,33 @@ void switch_stiff_cb(void){
         std::cout<<"change stiffness"<<std::endl;
 
 }
+void switch_stiff_cb2(void){
+        Eigen::VectorXd cp_stiff,cp_damping,extft;
+        cp_stiff.setZero(6);
+        cp_damping.setZero(6);
+        extft.setZero(6);
+        cp_stiff[0] = 1000;
+        cp_stiff[1] = 1;
+        cp_stiff[2] = 1000;
+        cp_stiff[3] = 200;
+        cp_stiff[4] = 200;
+        cp_stiff[5] = 200;
+        cp_damping[0] = 0.7;
+        cp_damping[1] = 0.7;
+        cp_damping[2] = 0.7;
+        cp_damping[3] = 0.7;
+        cp_damping[4] = 0.7;
+        cp_damping[5] = 0.7;
+//        extft[1] = 20;
+        kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+    //    kuka_lwr->update_robot_cp_exttcpft(extft);
+        std::cout<<"change stiffness"<<std::endl;
+
+}
+
 void switch_cpstiff_mode(){
     com_okc->start_brake();
-    switch_stiff_cb();
+    switch_stiff_cb1();
     kuka_lwr->switch2cpcontrol();
     com_okc->release_brake();
 }
@@ -237,53 +261,54 @@ int counter1 = 0;
 void run(){
     //only call for this function, the ->jnt_position_act is updated
     if((com_okc->data_available == true)&&(com_okc->controller_update == false)){
-        //        counter1++;
-        //        if(counter1 > 50){
-        //            kuka_lwr->update_robot_stiffness(pm);
-        //            counter1 =0;
-        //        }
-        struct timeval v_cur, v_old;
-        long long intervaltime;
-        intervaltime = 0;
-        if(gettimeofday(&v_old,NULL)){
-            std::cout<<"gettimeofday function error at the current time"<<std::endl;
-        }
-        Eigen::Vector3d p,f,t;
-        Eigen::Matrix3d o;
+//        //        counter1++;
+//        //        if(counter1 > 50){
+//        //            kuka_lwr->update_robot_stiffness(pm);
+//        //            counter1 =0;
+//        //        }
+//        struct timeval v_cur, v_old;
+//        long long intervaltime;
+//        intervaltime = 0;
+//        if(gettimeofday(&v_old,NULL)){
+//            std::cout<<"gettimeofday function error at the current time"<<std::endl;
+//        }
+//        Eigen::Vector3d p,f,t;
+//        Eigen::Matrix3d o;
 
-        p = kuka_lwr->get_cur_cart_p();
-        o = kuka_lwr->get_cur_cart_o();
-        kuka_lwr->get_eef_ft(f,t);
-        Eigen::MatrixXd Kcp;
-        Eigen::Matrix<double, 6, 7> J_eigen;
-        Kcp.setZero(6,6);
-        Kcp(0,0) = 4500;
-        Kcp(1,1) = 4500;
-        Kcp(2,2) = 4500;
-        Kcp(3,3) = 250;
-        Kcp(4,4) = 250;
-        Kcp(5,5) = 250;
+//        p = kuka_lwr->get_cur_cart_p();
+//        o = kuka_lwr->get_cur_cart_o();
+//        kuka_lwr->get_eef_ft(f,t);
+//        Eigen::MatrixXd Kcp;
+//        Eigen::Matrix<double, 6, 7> J_eigen;
+//        Kcp.setZero(6,6);
+//        Kcp(0,0) = 4500;
+//        Kcp(1,1) = 4500;
+//        Kcp(2,2) = 4500;
+//        Kcp(3,3) = 250;
+//        Kcp(4,4) = 250;
+//        Kcp(5,5) = 250;
 
-        Eigen::MatrixXd K_axis,K_axis_diag,K_cart;
-        K_axis.setZero(7,7);
-        K_axis_diag.setZero(7,7);
-        K_cart.setZero(7,7);
+//        Eigen::MatrixXd K_axis,K_axis_diag,K_cart;
+//        K_axis.setZero(7,7);
+//        K_axis_diag.setZero(7,7);
+//        K_cart.setZero(7,7);
 
 
-        J_eigen = kuka_lwr->Jac_kdl.data;
-        K_axis = J_eigen.transpose() * Kcp * J_eigen;
+//        J_eigen = kuka_lwr->Jac_kdl.data;
+//        K_axis = J_eigen.transpose() * Kcp * J_eigen;
 
-        for(int i = 0; i < 7; i++){
-            if(K_axis(i,i)>2000) K_axis(i,i) = 2000;
-            if(K_axis(i,i)<0.01) K_axis(i,i) = 0.01;
-            pm->stiff_ctrlpara.axis_stiffness[i] = K_axis_diag(i,i) = K_axis(i,i);
-            pm->stiff_ctrlpara.axis_damping[i] = 0.7;
-        }
-        K_cart = (J_eigen*K_axis_diag.inverse()*J_eigen.transpose()).inverse();
+//        for(int i = 0; i < 7; i++){
+//            if(K_axis(i,i)>2000) K_axis(i,i) = 2000;
+//            if(K_axis(i,i)<0.01) K_axis(i,i) = 0.01;
+//            pm->stiff_ctrlpara.axis_stiffness[i] = K_axis_diag(i,i) = K_axis(i,i);
+//            pm->stiff_ctrlpara.axis_damping[i] = 0.7;
+//        }
+//        K_cart = (J_eigen*K_axis_diag.inverse()*J_eigen.transpose()).inverse();
 //        stiffness_data<<K_axis(0,0)<<","<<K_axis(1,1)<<","<<K_axis(2,2)<<","<<K_axis(3,3)<<","<<K_axis(4,4)<<","<<K_axis(5,5);
 
         //kuka_lwr->update_robot_stiffness(pm);
         kuka_lwr->get_joint_position_act();
+        kuka_lwr->get_joint_position_mea();
         kuka_lwr->update_robot_state();
         //using all kinds of controllers to update the reference
         if(task->mt == JOINTS)
@@ -294,15 +319,15 @@ void run(){
         kuka_lwr->update_cbf_controller();
         kuka_lwr->set_joint_command(rmt);
         com_okc->controller_update = true;
-        counter++;
-        if(counter >=25){
-            print_pf();
-            counter = 0;
-        }
-        if(gettimeofday(&v_cur,NULL)){
-            std::cout<<"gettimeofday function error at the current time"<<std::endl;
-        }
-        intervaltime = timeval_diff(NULL,&v_cur,&v_old);
+//        counter++;
+//        if(counter >=25){
+//            print_pf();
+//            counter = 0;
+//        }
+//        if(gettimeofday(&v_cur,NULL)){
+//            std::cout<<"gettimeofday function error at the current time"<<std::endl;
+//        }
+//        intervaltime = timeval_diff(NULL,&v_cur,&v_old);
 //        std::cout<<"stiffness are in J"<<std::endl;std::cout<<K_axis<<std::endl;
 //        std::cout<<"stiffness are in C"<<std::endl;std::cout<<K_cart<<std::endl;
         //stiffness_data<<","<<intervaltime<<std::endl;
@@ -357,7 +382,7 @@ int main(int argc, char* argv[])
             inp = '\n';
             break;
         case 's':
-            switch_stiff_cb();
+            switch_stiff_cb2();
             inp = '\n';
             break;
         case 'w':

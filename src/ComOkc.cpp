@@ -124,8 +124,9 @@ int ComOkc::okcCartposAxisAbsCallback (void* priv, const fri_float_t* cartpos_ac
 //    okc_print_lbr_mnj(new_axispos);
     if (OKC_OK != okc_is_robot_in_command_mode(com_okc_ptr->okc,com_okc_ptr->robot_id)){
 //        okc_get_jntpos_act(ComOkc::okc,com_okc_ptr->robot_id,axispos_act);
-        std::cout<<"cartesian stiffness did get respond in time.........................."<<std::endl;
-        okc_cp_lbr_mnj(axispos_act,new_axispos);
+//        std::cout<<"cartesian stiffness did get respond in time.........................."<<std::endl;
+//        okc_print_lbr_mnj(axispos_act);
+        okc_cp_lbr_mnj(jnt_pos,new_axispos);
         okc_cp_cart_frm_dim(cartpos_act,new_cartpos);
         return (OKC_OK);
     }
@@ -180,12 +181,14 @@ int ComOkc::getrobot_id(){
 void ComOkc::start_brake(){
     for (int i = 0; i < 5; i++)
     okc_sleep_cycletime(okc,robot_id);
+    std::cout<<"start brake"<<std::endl;
     okc_request_monitor_mode(okc,robot_id);
 }
 
 void ComOkc::release_brake(){
     for (int i = 0; i < 5; i++)
     okc_sleep_cycletime(okc,robot_id);
+    std::cout<<"release brake"<<std::endl;
     okc_request_command_mode(okc,robot_id);
 }
 
@@ -356,6 +359,7 @@ void ComOkc::set_cp_ExtTcpFT(double *tcpft){
 }
 
 void ComOkc::switch_to_cp_impedance(){
+    okc_alter_cbmode(okc,robot_id,OKC_MODE_CALLBACK_POS_AXIS_ABS);
     okc_alter_cmdFlags (okc,robot_id,OKC_CMD_FLAGS_CP_AXIS_IMPEDANCE_MODE);
     okc_switch_to_cp_impedance(okc,robot_id);
 }
