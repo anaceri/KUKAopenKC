@@ -177,6 +177,15 @@ void KukaLwr::update_robot_cp_exttcpft(Eigen::VectorXd ft_kuka){
     okc_node->set_cp_ExtTcpFT(ft_okc);
 }
 
+
+void KukaLwr::switch2cpcontrol(){
+    okc_node->switch_to_cp_impedance();
+}
+
+void KukaLwr::request_monitor_mode(){
+    okc_node->request_monitor_mode();
+}
+
 double KukaLwr::gettimecycle(){
     double t;
     t = okc_node->cycle_time;

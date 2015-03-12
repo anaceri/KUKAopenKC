@@ -48,6 +48,8 @@ public:
     void set_cp_ExtTcpFT(double *tcpft);
     void start_brake();
     void release_brake();
+    void switch_to_cp_impedance();
+    void request_monitor_mode();
 private:
     static int instance_count;
     char hostname[16];

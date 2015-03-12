@@ -354,6 +354,13 @@ void ComOkc::set_cp_ExtTcpFT(double *tcpft){
     okc_set_cp_addTcpFT(okc,robot_id,extft);
 }
 
+void ComOkc::switch_to_cp_impedance(){
+    okc_switch_to_cp_impedance(okc,robot_id);
+}
+void ComOkc::request_monitor_mode(){
+    okc_request_monitor_mode(okc,robot_id);
+}
+
 ComOkc::ComOkc(RobotNameT connectToRobot=kuka_right, \
                const char* ahostname = OKC_HOST, const char* aport = OKC_PORT, KUKACTRLMODET kmt=JNT_IMP)
 {

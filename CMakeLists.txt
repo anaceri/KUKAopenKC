@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 file(GLOB_RECURSE SRCS src/*.cpp)
 file(GLOB_RECURSE HDRS src/*.h src/*.hpp)
 #Djallil setup
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -DCBF_NDEBUG -DDJALLIL_CONF")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -DCBF_NDEBUG -DDJALLIL_CONF")
 #grasp lab setup
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -DCBF_NDEBUG")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -DCBF_NDEBUG")
 
 # libopenkc
 set(CORE_ROOT_DIR CORE_ROOT_DIR CACHE PATH "path to the core libs")

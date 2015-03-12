@@ -163,8 +163,33 @@ void print_pf(void){
 }
 
 void switch_stiff_cb(void){
+        Eigen::VectorXd cp_stiff,cp_damping,extft;
+        cp_stiff.setZero(6);
+        cp_damping.setZero(6);
+        extft.setZero(6);
+        cp_stiff[0] = 2000;
+        cp_stiff[1] = 0;
+        cp_stiff[2] = 2000;
+        cp_stiff[3] = 200;
+        cp_stiff[4] = 200;
+        cp_stiff[5] = 200;
+        cp_damping[0] = 0.7;
+        cp_damping[1] = 0.7;
+        cp_damping[2] = 0.7;
+        cp_damping[3] = 0.7;
+        cp_damping[4] = 0.7;
+        cp_damping[5] = 0.7;
+//        extft[1] = 20;
+        kuka_lwr->update_robot_cp_stiffness(cp_stiff,cp_damping);
+    //    kuka_lwr->update_robot_cp_exttcpft(extft);
+        std::cout<<"change stiffness"<<std::endl;
 
-
+}
+void switch_cpstiff_mode(){
+    com_okc->start_brake();
+    switch_stiff_cb();
+    kuka_lwr->switch2cpcontrol();
+    com_okc->release_brake();
 }
 
 Timer tHello([]()
@@ -333,6 +358,10 @@ int main(int argc, char* argv[])
             break;
         case 's':
             switch_stiff_cb();
+            inp = '\n';
+            break;
+        case 'w':
+            switch_cpstiff_mode();
             inp = '\n';
             break;
         case 'A':
