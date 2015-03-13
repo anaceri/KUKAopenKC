@@ -181,6 +181,10 @@ void KukaLwr::update_robot_cp_exttcpft(Eigen::VectorXd ft_kuka){
 void KukaLwr::switch2cpcontrol(){
     okc_node->switch_to_cp_impedance();
 }
+void KukaLwr::switch2jntcontrol(){
+    okc_node->switch_to_jnt_impedance();
+}
+
 
 void KukaLwr::request_monitor_mode(){
     okc_node->request_monitor_mode();

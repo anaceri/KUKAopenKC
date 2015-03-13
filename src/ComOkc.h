@@ -49,6 +49,7 @@ public:
     void start_brake();
     void release_brake();
     void switch_to_cp_impedance();
+    void switch_to_jnt_impedance();
     void request_monitor_mode();
 private:
     static int instance_count;

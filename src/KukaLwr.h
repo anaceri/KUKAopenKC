@@ -48,6 +48,7 @@ public:
     void update_robot_cp_stiffness(Eigen::VectorXd cps,Eigen::VectorXd cpd);
     void update_robot_cp_exttcpft(Eigen::VectorXd ft);
     void switch2cpcontrol();
+    void switch2jntcontrol();
     void request_monitor_mode();
     JntLimitFilter *jlf;
     RobotNameT get_robotname(){return rn;}

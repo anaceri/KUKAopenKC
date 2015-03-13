@@ -363,6 +363,13 @@ void ComOkc::switch_to_cp_impedance(){
     okc_alter_cmdFlags (okc,robot_id,OKC_CMD_FLAGS_CP_AXIS_IMPEDANCE_MODE);
     okc_switch_to_cp_impedance(okc,robot_id);
 }
+
+void ComOkc::switch_to_jnt_impedance(){
+    okc_alter_cbmode(okc,robot_id,OKC_MODE_CALLBACK_AXIS_ABS);
+    okc_alter_cmdFlags (okc,robot_id,OKC_CMD_FLAGS_AXIS_IMPEDANCE_MODE);
+    okc_switch_to_axis_impedance(okc,robot_id);
+}
+
 void ComOkc::request_monitor_mode(){
     okc_request_monitor_mode(okc,robot_id);
 }

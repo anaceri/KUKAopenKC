@@ -46,6 +46,7 @@ public:
     virtual void update_robot_cp_exttcpft(Eigen::VectorXd ft) = 0;
     virtual void setAxisStiffnessDamping (double* s, double* d) = 0;
     virtual void switch2cpcontrol() = 0;
+    virtual void switch2jntcontrol() = 0;
     virtual void request_monitor_mode() = 0;
     virtual void no_move() = 0;
     virtual void waitForFinished() = 0;
